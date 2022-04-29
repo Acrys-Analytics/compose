@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  redis:
+    container_name: acrys-redis
+    image: redis:latest
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - acrys
+    volumes:
+      - ./redis:/data
+
+  db:
+    container_name: acrys-db
+    image: postgres:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - acrys
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  backend:
+    container_name: acrys-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - acrys
+    ports:
+      - 3000:3000
+
+  frontend:
+    container_name: acrys-frontend
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_PATH=http://localhost:3000
+    networks:
+      - acrys
+    ports:
+      - 8080:3000
+
+networks:
+  acrys:
+    name: acrys

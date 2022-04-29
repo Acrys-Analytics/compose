@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  redis:
+    container_name: acrys-redis
+    image: redis:latest
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis:/data
+
+  db:
+    container_name: acrys-db
+    image: postgres:latest
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db:/var/lib/postgresql/data

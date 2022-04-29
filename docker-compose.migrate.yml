@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  db:
+    container_name: acrys-db
+    image: postgres:latest
+    env_file:
+      - .env
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  prisma-migrate:
+    container_name: prisma-migrate
+    build:
+      context: ./backend/prisma
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - db

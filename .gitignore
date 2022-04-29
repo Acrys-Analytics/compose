@@ -1,0 +1,8 @@
+# Volumes
+/backend
+/client
+/db
+/redis
+
+# Env file
+.env
